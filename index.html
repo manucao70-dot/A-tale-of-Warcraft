@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Tale of Warcraft — La Cinquième Guerre</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8b6914;
+    --bg-dark: #0d0a06;
+    --bg-mid: #1a1208;
+    --bg-card: #120e07;
+    --text: #e8d5a0;
+    --text-dim: #8a7550;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text);
+    font-family: 'Crimson Text', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px 40px;
+    border-bottom: 1px solid var(--gold-dark);
+    background: linear-gradient(180deg, #0a0703 0%, var(--bg-dark) 100%);
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  }
+
+  .header-ornament {
+    color: var(--gold-dark);
+    font-size: 14px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    font-family: 'Cinzel', serif;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    color: var(--gold-light);
+    text-shadow: 0 0 40px rgba(201, 168, 76, 0.3), 0 2px 4px rgba(0,0,0,0.8);
+    letter-spacing: 3px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(14px, 2vw, 20px);
+    color: var(--gold-dark);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .header-tagline {
+    margin-top: 20px;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 16px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 1px solid var(--gold-dark);
+    background: var(--bg-mid);
+  }
+
+  nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    transition: all 0.3s;
+    border-right: 1px solid rgba(139, 105, 20, 0.2);
+    position: relative;
+  }
+
+  nav a:hover {
+    color: var(--gold-light);
+    background: rgba(201, 168, 76, 0.05);
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  nav a:hover::after { transform: scaleX(1); }
+
+  .lang-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-mid);
+    border-bottom: 1px solid rgba(139, 105, 20, 0.2);
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid var(--gold-dark);
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn.active, .lang-btn:hover {
+    background: rgba(201, 168, 76, 0.1);
+    color: var(--gold-light);
+    border-color: var(--gold);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+  }
+
+  .post-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(139, 105, 20, 0.3);
+    margin-bottom: 32px;
+    position: relative;
+    transition: border-color 0.3s;
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  .post-card:hover { border-color: var(--gold-dark); }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+  }
+
+  .post-header {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid rgba(139, 105, 20, 0.2);
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .post-tag {
+    background: rgba(201, 168, 76, 0.1);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    text-transform: uppercase;
+  }
+
+  .post-date {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .post-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1.3;
+  }
+
+  .post-body {
+    padding: 20px 28px 24px;
+    color: var(--text);
+    font-size: 17px;
+  }
+
+  .post-body p { margin-bottom: 14px; }
+  .post-body .en { display: none; }
+  .post-body.show-en .fr { display: none; }
+  .post-body.show-en .en { display: block; }
+
+  .post-img {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #0a1a2e 0%, #1a0a0a 50%, #0a0a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-dark);
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    border-bottom: 1px solid rgba(139, 105, 20, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-img::before {
+    content: '⚔';
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.05;
+  }
+
+  .read-more {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+    cursor: pointer;
+  }
+
+  .read-more:hover { border-color: var(--gold); }
+
+  .sidebar-widget {
+    background: var(--bg-card);
+    border: 1px solid rgba(139, 105, 20, 0.3);
+    margin-bottom: 24px;
+    padding: 20px;
+  }
+
+  .widget-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(139, 105, 20, 0.3);
+  }
+
+  .about-text {
+    font-size: 15px;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .about-text .en { display: none; }
+  .about-text.show-en .fr { display: none; }
+  .about-text.show-en .en { display: block; }
+
+  .progress-item { margin-bottom: 14px; }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(139, 105, 20, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    transition: width 1s ease;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    background: none;
+    border: 1px solid rgba(139, 105, 20, 0.3);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .tag:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(201, 168, 76, 0.05);
+  }
+
+  .disclaimer {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-style: italic;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid rgba(139, 105, 20, 0.2);
+    line-height: 1.5;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    border-top: 1px solid var(--gold-dark);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    background: var(--bg-mid);
+  }
+
+  footer::before {
+    content: '⚔ ✦ ⚔';
+    display: block;
+    color: var(--gold-dark);
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .post-card { opacity: 0; animation-fill-mode: forwards; }
+  .post-card:nth-child(1) { animation-delay: 0s; }
+  .post-card:nth-child(2) { animation-delay: 0.1s; }
+  .post-card:nth-child(3) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-ornament">✦ Devlog ✦</div>
+  <h1>A TALE OF WARCRAFT</h1>
+  <div class="subtitle">La Cinquième Guerre / The Fifth War</div>
+  <div class="header-tagline">Un RPG fan-made dans l'univers de Warcraft — A Warcraft fan-made RPG</div>
+</header>
+
+<nav>
+  <a href="#">Accueil / Home</a>
+  <a href="#">Devlogs</a>
+  <a href="#">Le Projet / The Project</a>
+  <a href="#">Personnages / Characters</a>
+  <a href="#">Screenshots</a>
+  <a href="#">Contact</a>
+</nav>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('fr', this)">🇫🇷 Français</button>
+  <button class="lang-btn" onclick="setLang('en', this)">🇬🇧 English</button>
+</div>
+
+<div class="container">
+  <main>
+
+    <article class="post-card">
+      <div class="post-img">[ SCREENSHOT — Mysthia vs Orc ]</div>
+      <div class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">Devlog #1</span>
+          <span class="post-date">Juin 2026</span>
+        </div>
+        <div class="post-title">Introduction — Le projet prend vie</div>
+      </div>
+      <div class="post-body">
+        <div class="fr">
+          <p>Salut tout le monde ! 👋</p>
+          <p>Alors... je fais un RPG Warcraft. Je sais, je sais. Mais écoutez-moi.</p>
+          <p>J'ai toujours voulu vivre le lore de Warcraft à travers le prisme d'un RPG DS classique comme DBZ Attack of the Saiyans. Tour par tour, double écran, sprites pixel art... vous voyez l'idée.</p>
+          <p>Le jeu propose un layout double écran style DS, un système de combat custom, des personnages jouables et une histoire riche en 5 actes dans les lieux du lore Warcraft.</p>
+          <p>C'est un projet fan privé pour moi et mes amis, mais j'ai décidé de documenter l'aventure. 😄</p>
+        </div>
+        <div class="en">
+          <p>Hey everyone! 👋</p>
+          <p>So... I'm making a Warcraft RPG. I know, I know. But hear me out.</p>
+          <p>I've always wanted to experience Warcraft lore through the lens of a classic DS RPG like DBZ Attack of the Saiyans. Turn-based combat, dual screen layout, pixel art sprites... you get the idea.</p>
+          <p>The game features a DS-style dual screen layout, a custom combat system, playable characters and a rich 5-act story set in Warcraft lore locations.</p>
+          <p>It's a private fan project for me and my friends, but I figured I'd document the journey anyway. 😄</p>
+        </div>
+        <span class="read-more">Lire la suite / Read more →</span>
+      </div>
+    </article>
+
+    <article class="post-card">
+      <div class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">Devlog #2</span>
+          <span class="post-date">Juin 2026</span>
+        </div>
+        <div class="post-title">Le HUD Dual Screen — Inspiration DS</div>
+      </div>
+      <div class="post-body">
+        <div class="fr">
+          <p>La fonctionnalité dont tout le monde me parle sur Reddit ! 😄</p>
+          <p>L'idée était simple : simuler l'expérience d'un émulateur DS directement dans RPG Maker MZ. Un écran du haut pour le combat et la map, un écran du bas pour le HUD permanent.</p>
+          <p>Tout repose sur un plugin JavaScript custom qui divise la résolution et confine chaque zone dans son espace dédié.</p>
+        </div>
+        <div class="en">
+          <p>The feature everyone's been asking about on Reddit! 😄</p>
+          <p>The idea was simple: simulate the DS emulator experience directly in RPG Maker MZ. Top screen for combat and map, bottom screen for the permanent HUD.</p>
+          <p>It all relies on a custom JavaScript plugin that splits the resolution and confines each zone to its dedicated space.</p>
+        </div>
+        <span class="read-more">Lire la suite / Read more →</span>
+      </div>
+    </article>
+
+    <article class="post-card">
+      <div class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">Devlog #3</span>
+          <span class="post-date">Juin 2026</span>
+        </div>
+        <div class="post-title">Les personnages — Direction artistique</div>
+      </div>
+      <div class="post-body">
+        <div class="fr">
+          <p>Rencontre avec les héros de La Cinquième Guerre. Le paladin de la Main d'Argent, la prêtresse haute elfe Mysthia, le guerrier aux cheveux noirs en bataille...</p>
+          <p>Mon artiste fait un travail exceptionnel pour donner vie à ces personnages dans un style pixel art low fantasy cohérent avec l'univers Warcraft.</p>
+        </div>
+        <div class="en">
+          <p>Meet the heroes of The Fifth War. The Silver Hand paladin, the high elf priestess Mysthia, the young warrior with wild black hair...</p>
+          <p>My artist is doing exceptional work bringing these characters to life in a pixel art low fantasy style consistent with the Warcraft universe.</p>
+        </div>
+        <span class="read-more">Lire la suite / Read more →</span>
+      </div>
+    </article>
+
+  </main>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-widget">
+      <div class="widget-title">Le Projet / The Project</div>
+      <p class="about-text">
+        <span class="fr">Projet fan non-commercial inspiré de l'univers Warcraft de Blizzard. Non affilié à Blizzard Entertainment. Fait avec amour. ❤️</span>
+        <span class="en">Non-commercial fan project inspired by Blizzard's Warcraft universe. Not affiliated with Blizzard Entertainment. Made with love. ❤️</span>
+      </p>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-title">Progression / Progress</div>
+      <div class="progress-item">
+        <div class="progress-label"><span>HUD Combat</span><span>85%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Personnages</span><span>30%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Scénario</span><span>100%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Acte I</span><span>15%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Assets</span><span>20%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-title">Tags</div>
+      <div class="tag-cloud">
+        <span class="tag">RPG Maker MZ</span>
+        <span class="tag">Warcraft</span>
+        <span class="tag">Pixel Art</span>
+        <span class="tag">Devlog</span>
+        <span class="tag">DS Style</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">Low Fantasy</span>
+        <span class="tag">Fan Game</span>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="disclaimer">
+        Fan project — Not affiliated with Blizzard Entertainment. Non-commercial. All Warcraft references belong to their respective owners.
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  A Tale of Warcraft : La Cinquième Guerre / The Fifth War<br>
+  Fan Project — Non-Commercial — Made with ❤️
+</footer>
+
+<script>
+  function setLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.post-body, .about-text').forEach(el => {
+      lang === 'en' ? el.classList.add('show-en') : el.classList.remove('show-en');
+    });
+  }
+</script>
+
+</body>
+</html>
